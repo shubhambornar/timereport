@@ -970,8 +970,8 @@ $(document).ready(function() {
 						</form:select></td>
 					<td><form:select path="quarter" id="quarter" disabled="true" cssClass="form-control" >
 							<option selected="selected" disabled="disabled">Quarter</option>
-							<!-- 	<option value="all">All</option>
-					<option value="q1">Q1</option>
+						 	<option value="all">All</option>
+					<!--	<option value="q1">Q1</option>
 					<option value="q2">Q2</option>
 					<option value="q3">Q3</option>
 					<option value="q4">Q4</option> -->
