@@ -868,10 +868,12 @@ CSS /LESS Color variations // // --------------------------------
 				}
 		});
 
+		if ($("#empId").length > 0 && $("#empId").val() != "") {
+			$("#du").prop("disabled", true);
+		} 
 		$("#empId").change(function() {
 
 			if ($("#empId").length > 0 && $("#empId").val() != "") {
-				alert($("#empId").val());
 				$("#du").prop("disabled", true);
 			} else {
 				$("#du").prop("disabled", false);
