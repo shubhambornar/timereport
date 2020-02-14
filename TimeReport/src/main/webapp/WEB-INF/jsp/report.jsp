@@ -1028,7 +1028,7 @@ $(document).ready(function() {
 					<c:forEach items="${list}" var="itr">
 
 						<tr>
-							<td></td>
+							<td><c:out value="${itr.employeeId}"></c:out></td>
 							<td></td>
 							<td><c:out value="${itr.employeeName}"></c:out></td>
 							<td></td>
