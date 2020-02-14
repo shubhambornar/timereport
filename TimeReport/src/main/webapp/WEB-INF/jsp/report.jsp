@@ -954,7 +954,7 @@ $(document).ready(function() {
 <body>
 
 
-	<form:form modelAttribute="filterObj" action="/accenture/timerport"
+	<form:form modelAttribute="filterObj" action="/accenture/timereport"
 		method="POST">
 
 
