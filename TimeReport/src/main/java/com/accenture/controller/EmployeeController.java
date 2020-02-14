@@ -36,7 +36,7 @@ public class EmployeeController {
 	/*
 	 * @PostMapping(value = "/getAll")
 	 */	
-	@RequestMapping(value = "/getAll", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/timereport", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView getAll(FilterBean filterObj) throws ParseException {
 
 		//employeeWrapper.getCountBasedOnYearAndDU(2019, "FSBBAR02");
