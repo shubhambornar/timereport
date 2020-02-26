@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +17,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.accenture.business.bean.EmployeeReport;
@@ -53,23 +57,6 @@ public class EmployeeController {
 	public ModelAndView getAll(FilterBean filterObj) throws ParseException, IOException {
 
 
-		//read excel
-		
-		FileInputStream fis = new FileInputStream(new File("C:\\Users\\shubh\\Documents\\tempexcel.xlsx"));
-		
-		XSSFWorkbook workbook = new XSSFWorkbook(fis);
-		XSSFSheet sheet = workbook.getSheetAt(0);
-		Iterator<Row> ite = sheet.rowIterator();
-		while(ite.hasNext()){
-			Row row = ite.next();
-			Iterator<Cell> cite = row.cellIterator();
-			while(cite.hasNext()){
-				Cell c = cite.next();
-				System.out.print(c.toString() +"  ");
-			}
-			System.out.println();
-		}
-		fis.close();
 		
 		
 		System.out.println("In getAll controller");
@@ -263,11 +250,32 @@ public class EmployeeController {
 		modelAndView.setViewName("insert");
 		return modelAndView;
 	}
-	@RequestMapping(value = "/insert", method =  RequestMethod.POST)
-	public ModelAndView insert(@RequestParam(name = "fileToUpload") File file) {
+	@RequestMapping(value = "/insert", method =  {RequestMethod.GET, RequestMethod.POST})
+	public ModelAndView insert(@RequestParam(name = "fileToUpload") MultipartFile  file) throws IOException {
 		
 		
+		//read excel
+			System.out.println("in insert"+file.getOriginalFilename());
 		
+	        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+	                    System.out.println(fileName);
+	                    
+			FileInputStream fis = new FileInputStream(new File(fileName));
+				
+				XSSFWorkbook workbook = new XSSFWorkbook(fis);
+				XSSFSheet sheet = workbook.getSheetAt(0);
+				Iterator<Row> ite = sheet.rowIterator();
+				while(ite.hasNext()){
+					Row row = ite.next();
+					Iterator<Cell> cite = row.cellIterator();
+					while(cite.hasNext()){
+						Cell c = cite.next();
+						System.out.print(c.toString() +"  ");
+					}
+					System.out.println();
+				}
+				fis.close();
+				
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("insert");
 		return modelAndView;
