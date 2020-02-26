@@ -24,7 +24,7 @@
 <!-- <script>
 	$(document).ready(function() {
 		$("#dlist").change(function() {
-			alert($("#dlist").val());
+			alert($("#dlistt").val());
 		});
 
 		$("#year").change(function() {

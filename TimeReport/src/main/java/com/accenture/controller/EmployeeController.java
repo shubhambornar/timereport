@@ -59,7 +59,7 @@ public class EmployeeController {
 
 		
 		
-		System.out.println("In getAll controller");
+		System.out.println("In getAll controllerr");
 		System.out.println(filterObj);
 		if(filterObj.getYear()==null)
 			filterObj.setYear(0);
