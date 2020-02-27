@@ -31,4 +31,9 @@ public interface EmployeeRepository extends MongoRepository<EmployeeEntity, Stri
 	@Query("{'employeeId' : ?0  }")
 	public List<EmployeeEntity> getBasedOnEmployeeId(Integer employeeId);
 
+	//check if period and brid is avalable
+	
+	@Query("{'BRID' : ?0 , 'period' : ?1 }")
+	public EmployeeEntity checkIfRecordWithGivenBridAndPeriodAvailable(String brid, Date period);
+	
 }

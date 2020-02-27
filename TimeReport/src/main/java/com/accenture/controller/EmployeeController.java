@@ -1,39 +1,27 @@
 package com.accenture.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.text.ParseException;
+
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
+
 import java.util.List;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.accenture.business.bean.EmployeeReport;
 import com.accenture.business.bean.FilterBean;
 import com.accenture.entity.EmployeeEntity;
 import com.accenture.repository.EmployeeWrapper;
-import com.mongodb.client.DistinctIterable;
 
 
 
@@ -43,7 +31,7 @@ import com.mongodb.client.DistinctIterable;
 public class EmployeeController {
 	@Autowired
 	private EmployeeWrapper employeeWrapper;
-	
+
 
 	/*
 	 * @Autowired private EmpRepo emprepo;
@@ -57,8 +45,8 @@ public class EmployeeController {
 	public ModelAndView getAll(FilterBean filterObj) throws ParseException, IOException {
 
 
-		
-		
+
+
 		System.out.println("In getAll controllerr");
 		System.out.println(filterObj);
 		if(filterObj.getYear()==null)
@@ -70,10 +58,10 @@ public class EmployeeController {
 		System.out.println(filterObj);
 		//	System.out.println(emprepo.findDistinctPeriod());
 		ModelAndView modelAndView = new ModelAndView();
-		
+
 		List<EmployeeEntity> documentList = null;
 		List<EmployeeReport> employeeReportList = null;
-		
+
 		if(filterObj.getIsCount()==false) {
 			if(filterObj.getYear()!=0 && filterObj.getQuarter()=="all" && filterObj.getEmployeeId()!=null) {
 				// Selected ->Year and employeeID
@@ -114,7 +102,7 @@ public class EmployeeController {
 				documentList =	employeeWrapper.getBasedOnYearAndDU(filterObj.getYear(), filterObj.getDu());
 			}
 			else if(filterObj.getDu()!="all" && filterObj.getQuarter()=="all"  && filterObj.getYear()==0) {
-					documentList = employeeWrapper.getBasedOnDu(filterObj.getDu());
+				documentList = employeeWrapper.getBasedOnDu(filterObj.getDu());
 			}
 			else if(filterObj.getDu()!="all" && filterObj.getQuarter()!="all" && filterObj.getYear()!=0) {
 
@@ -169,7 +157,7 @@ public class EmployeeController {
 				employeeReportList =	employeeWrapper.getCountBasedOnYearAndDU(filterObj.getYear(), filterObj.getDu());
 			}
 			else if(filterObj.getDu()!="all" && filterObj.getQuarter()=="all"  && filterObj.getYear()==0) {
-					employeeReportList = employeeWrapper.getCountBasedOnDu(filterObj.getDu());
+				employeeReportList = employeeWrapper.getCountBasedOnDu(filterObj.getDu());
 			}
 			else if(filterObj.getDu()!="all" && filterObj.getQuarter()!="all" && filterObj.getYear()!=0) {
 
@@ -178,7 +166,7 @@ public class EmployeeController {
 			}
 			else
 				employeeReportList = employeeWrapper.getCountAll();
-			
+
 			System.out.println("Printing employee Report List: "+employeeReportList);
 		}
 		modelAndView.addObject("list", documentList );
@@ -194,7 +182,7 @@ public class EmployeeController {
 	public FilterBean getFilterBean() {
 		return new FilterBean();
 	}
-	
+
 	@ModelAttribute(value="yearObj")
 	public List<Integer> getYearList(){
 		List<Integer> list = new ArrayList<>();
@@ -205,7 +193,7 @@ public class EmployeeController {
 		System.out.println("Returning list of dates");
 		return list;
 	}
-	
+
 	@ModelAttribute(value="quarterList")
 	public List<String> getQuarterList(){
 		List<String> list = new ArrayList<>();
@@ -216,8 +204,8 @@ public class EmployeeController {
 		System.out.println("Returning list of quarters");
 		return list;
 	}
-	
-	
+
+
 	@ModelAttribute(value="duList")
 	public List<String> getDuList(){
 		List<String> list = new ArrayList<>();
@@ -228,7 +216,7 @@ public class EmployeeController {
 		System.out.println("Returning list of years");
 		return list;
 	}
-	
+
 	/*	
 	 * @ModelAttribute(value = "dateList") public DistinctIterable<Date>
 	 * getAllDateList(){ DistinctIterable<Date>
@@ -244,41 +232,6 @@ public class EmployeeController {
 	}
 
 
-	@RequestMapping(value = "/upload", method = {RequestMethod.GET, RequestMethod.POST})
-	public ModelAndView showUpload() {
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("insert");
-		return modelAndView;
-	}
-	@RequestMapping(value = "/insert", method =  {RequestMethod.GET, RequestMethod.POST})
-	public ModelAndView insert(@RequestParam(name = "fileToUpload") MultipartFile  file) throws IOException {
-		
-		
-		//read excel
-			System.out.println("in insert"+file.getOriginalFilename());
-		
-	        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-	                    System.out.println(fileName);
-	                    
-			FileInputStream fis = new FileInputStream(new File(fileName));
-				
-				XSSFWorkbook workbook = new XSSFWorkbook(fis);
-				XSSFSheet sheet = workbook.getSheetAt(0);
-				Iterator<Row> ite = sheet.rowIterator();
-				while(ite.hasNext()){
-					Row row = ite.next();
-					Iterator<Cell> cite = row.cellIterator();
-					while(cite.hasNext()){
-						Cell c = cite.next();
-						System.out.print(c.toString() +"  ");
-					}
-					System.out.println();
-				}
-				fis.close();
-				
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("insert");
-		return modelAndView;
-	}
+
 
 }

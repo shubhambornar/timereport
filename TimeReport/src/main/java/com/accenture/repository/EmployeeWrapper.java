@@ -468,4 +468,11 @@ public List<EmployeeReport> generalizedGetCountBasedOnYearAndQuarterAndDU(Date s
 			List<EmployeeEntity> list = employeeRepository.getBasedOnDu(du);
 			return list;
 		}
+		public boolean checkIfRecordWithGivenBridAndPeriodAvailable(String brid, Date period) {
+			if(employeeRepository.checkIfRecordWithGivenBridAndPeriodAvailable(brid, period)!=null)
+				return true;
+			else
+				return false;
+		}
+
 }
