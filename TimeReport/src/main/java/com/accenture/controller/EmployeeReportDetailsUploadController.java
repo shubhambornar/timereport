@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import javax.swing.text.html.parser.Entity;
 
@@ -18,6 +19,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,8 +33,9 @@ import com.accenture.repository.EmployeeReportUploadWraper;
 import com.accenture.repository.EmployeeWrapper;
 
 @RestController
+@Scope("session")
 @RequestMapping(value = "/accenture",method = { RequestMethod.GET, RequestMethod.POST })
-@SessionAttributes(value = "filterObj")
+//@SessionAttributes(value = "filterObj")
 @MultipartConfig
 public class EmployeeReportDetailsUploadController {
 	
@@ -49,7 +52,7 @@ public class EmployeeReportDetailsUploadController {
 		return modelAndView;
 	}
 	@RequestMapping(value = "/insert", method =  {RequestMethod.GET, RequestMethod.POST})
-	public ModelAndView insert(@RequestParam(name = "fileToUpload") Part  file) throws IOException, ParseException {
+	public ModelAndView insert(@RequestParam(name = "fileToUpload") Part  file, HttpSession session) throws IOException, ParseException {
 		
 		Integer itr=13,count=0;
 		List<EmployeeEntity> emInsertList = new ArrayList<EmployeeEntity>();
@@ -131,6 +134,8 @@ public class EmployeeReportDetailsUploadController {
 				fileContent.close();
 				
 				
+		session.setAttribute("sInsertList", emInsertList);
+		session.setAttribute("sRejectList", emRejectList);
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("emInsertList", emInsertList);
 		modelAndView.addObject("emRejectList", emRejectList);
@@ -138,10 +143,10 @@ public class EmployeeReportDetailsUploadController {
 		return modelAndView;
 	}
 	
-	@RequestMapping(value = "/insertConfirm", method = RequestMethod.POST)
-	public ModelAndView insertConfirm() {
-		
-		System.out.println(em);
+	@RequestMapping(value = "/insertConfirm", method = RequestMethod.GET)
+	public ModelAndView insertConfirm(HttpSession session) {
+		List<EmployeeEntity> list = (List<EmployeeEntity>) session.getAttribute("emInsertList");
+		System.out.println(list);
 		ModelAndView modelAndView = new ModelAndView();
 		
 		modelAndView.setViewName("report");
