@@ -20,7 +20,7 @@
 <body>
 			<div class="table-responsive-vertical shadow-z-1">
 			<c:if test="${not empty emInsertList}">
-			<h3><center>Data to be Inserted</center>     <a href="insertConfirm">Insert</a></h3>
+			<h3><center>Data to be Inserted</center>     <a href="/accenture/insertConfirm">Insert</a></h3>
 				<table class="table table-hover table-mc-light-blue">
 
 

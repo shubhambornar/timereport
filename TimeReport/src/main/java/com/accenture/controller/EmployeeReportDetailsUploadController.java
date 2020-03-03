@@ -20,10 +20,12 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,9 +35,9 @@ import com.accenture.repository.EmployeeReportUploadWraper;
 import com.accenture.repository.EmployeeWrapper;
 
 @RestController
-@Scope("session")
+//@Scope("session")
 @RequestMapping(value = "/accenture",method = { RequestMethod.GET, RequestMethod.POST })
-//@SessionAttributes(value = "filterObj")
+@SessionAttributes(value = "emInsertList")
 @MultipartConfig
 public class EmployeeReportDetailsUploadController {
 	
@@ -103,7 +105,7 @@ public class EmployeeReportDetailsUploadController {
 							emEntity.setPeriod(period);
 							//emEntity.setEmployeeName(employeeDetails.getEmployeeName());
 							
-							if(brid.equals("G01061958"))
+							if(brid.equals("G01061958"))        //CHANGE THIS
 							emEntity.setDU(employeeDetails.getDU());
 							//emEntity.setAccentureEmailId(employeeDetails.getAccentureEmailId());
 							//role
@@ -126,7 +128,7 @@ public class EmployeeReportDetailsUploadController {
 					}
 					System.out.println();
 					
-					if(count==19)
+					if(count==19)   //CHANGE THIS
 						break;
 					
 				}
@@ -134,8 +136,8 @@ public class EmployeeReportDetailsUploadController {
 				fileContent.close();
 				
 				
-		session.setAttribute("sInsertList", emInsertList);
-		session.setAttribute("sRejectList", emRejectList);
+		//session.setAttribute("sInsertList", emInsertList);
+		//session.setAttribute("sRejectList", emRejectList);
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("emInsertList", emInsertList);
 		modelAndView.addObject("emRejectList", emRejectList);
@@ -144,12 +146,17 @@ public class EmployeeReportDetailsUploadController {
 	}
 	
 	@RequestMapping(value = "/insertConfirm", method = RequestMethod.GET)
-	public ModelAndView insertConfirm(HttpSession session) {
-		List<EmployeeEntity> list = (List<EmployeeEntity>) session.getAttribute("emInsertList");
-		System.out.println(list);
+	public ModelAndView insertConfirm( @SessionAttribute("emInsertList")List<EmployeeEntity> emInsertList) {
+		//HttpSession session
+		System.out.println("In insertconfirm to save records");
+		//List<EmployeeEntity> list = (List<EmployeeEntity>) session.getAttribute("emInsertList");
+		//System.out.println(emInsertList);
+		
+		employeeWrapper.insertList(emInsertList);
+		
 		ModelAndView modelAndView = new ModelAndView();
 		
-		modelAndView.setViewName("report");
+		modelAndView.setViewName("upload");
 		return modelAndView;
 	}
 }
